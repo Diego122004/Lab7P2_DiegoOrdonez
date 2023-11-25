@@ -7,6 +7,8 @@ package lab7p2_diegoordonez;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 /**
  *
@@ -18,8 +20,11 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
      * Creates new form Lab7P2_DiegoOrdonez
      */
     static ArrayList<Usuario> users = new ArrayList();
-    static ArrayList<Restaurante> restaurantes = new ArrayList<>();
+    static ArrayList<Restaurante> restaurantes = new ArrayList();
+    static ArrayList<Producto> productos = new ArrayList();
     static File archivo = null;
+    static File archivo2 = null;
+    static File archivo3 = null;
 
     public Lab7P2_DiegoOrdonez() {
         initComponents();
@@ -45,6 +50,32 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
                 String[] temp = a.split(",");
                 while (sc.hasNext()) {
                     users.add(new Usuario(temp[0], temp[1], temp[2]));
+
+                }
+
+            } catch (Exception ex) {
+            }
+            sc.close();
+        }//FIN IF
+    }
+    public void cargarArchivo2() {
+        Scanner sc = null;
+        users = new ArrayList();
+        if (archivo2.exists()) {
+            try {
+                sc = new Scanner(archivo2);
+                String a = "";
+                a += sc.next();
+                a = a.replace("nombre:", "");
+                a = a.replace("[", "");
+                a = a.replace("]", "");
+                a = a.replace(":", "");
+                a = a.replace("ubicacion:", "");
+              
+                a = a.replace("contraseña:", "");
+                String[] temp2 = a.split(",");
+                while (sc.hasNext()) {
+                    users.add(new Usuario(temp2[0], temp2[1], temp2[2]));
 
                 }
 
@@ -84,6 +115,7 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
         jpas_CU_contra = new javax.swing.JPasswordField();
         jb_creaU = new javax.swing.JButton();
         jp_menuAdmin = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
@@ -94,9 +126,12 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
         jb_CR_aregar = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        jt_CP_name = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        jt_CP_price = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jtr_tucola = new javax.swing.JTree();
 
         jd_loging_CrearU.setPreferredSize(new java.awt.Dimension(801, 401));
 
@@ -165,7 +200,7 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
                         .addComponent(jb_LOG_ingresar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jb_LOG_CC, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(847, Short.MAX_VALUE))
+                .addContainerGap(859, Short.MAX_VALUE))
         );
         jp_logingLayout.setVerticalGroup(
             jp_logingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -184,7 +219,7 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
                 .addGroup(jp_logingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jb_LOG_ingresar, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
                     .addComponent(jb_LOG_CC, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(412, Short.MAX_VALUE))
+                .addContainerGap(424, Short.MAX_VALUE))
         );
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -307,7 +342,7 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(218, 218, 218)
                         .addComponent(jb_CR_aregar, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(424, Short.MAX_VALUE))
+                .addContainerGap(256, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -324,21 +359,33 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
                     .addComponent(jt_CR_ubi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jb_CR_aregar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(203, Short.MAX_VALUE))
+                .addContainerGap(215, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Crear Restaurante", jPanel1);
 
         jLabel11.setText("Nombre");
 
-        jTextField2.setText("Ingrese nombre del producto");
+        jt_CP_name.setText("Ingrese nombre del producto");
 
         jLabel12.setText("Precio");
 
-        jTextField3.setText("Precio del producto");
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+        jt_CP_price.setText("Precio del producto");
+        jt_CP_price.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
+                jt_CP_priceActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Agregar productos");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -347,48 +394,83 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(108, 108, 108)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
-                    .addComponent(jTextField3))
-                .addContainerGap(388, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(108, 108, 108)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jt_CP_name, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+                            .addComponent(jt_CP_price)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(288, 288, 288)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(220, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(69, 69, 69)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+                    .addComponent(jt_CP_name, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
                     .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                    .addComponent(jt_CP_price, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
                     .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(295, Short.MAX_VALUE))
+                .addGap(50, 50, 50)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(203, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Agreagr producto", jPanel2);
+
+        jScrollPane1.setViewportView(jtr_tucola);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTabbedPane1)
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout jp_menuAdminLayout = new javax.swing.GroupLayout(jp_menuAdmin);
         jp_menuAdmin.setLayout(jp_menuAdminLayout);
         jp_menuAdminLayout.setHorizontalGroup(
             jp_menuAdminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addGroup(jp_menuAdminLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jp_menuAdminLayout.setVerticalGroup(
             jp_menuAdminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addGroup(jp_menuAdminLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1370, Short.MAX_VALUE)
+            .addGap(0, 1382, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
@@ -407,7 +489,7 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 670, Short.MAX_VALUE)
+            .addGap(0, 682, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
@@ -479,13 +561,69 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
     private void jb_CR_aregarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_CR_aregarMouseClicked
         Restaurante rest = new Restaurante(jt_CR_name.getText(), jt_CR_ubi.getText());
         restaurantes.add(rest);
+        
+        archivo2 = new File("./rst");
+        FileWriter fw = null;
+        BufferedWriter bw = null;
+        try {
+            fw = new FileWriter(archivo, false);
+            bw = new BufferedWriter(fw);
+            for (Restaurante t : restaurantes) {
+
+                bw.write("[nombre:" + jt_CR_name.getText() + "," + "usuario:" + jt_CR_ubi + "," + "productos" + "" + "]");
+
+            }
+            bw.flush();
+        } catch (Exception ex) {
+        }
+        try {
+            bw.close();
+            fw.close();
+        } catch (Exception e) {
+        }
+        
         jt_CR_name.setText("");
         jt_CR_ubi.setText("");
+        
+        DefaultTreeModel m = (DefaultTreeModel)jtr_tucola.getModel();
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode)m.getRoot();
+          Scanner sc = null;
+        users = new ArrayList();
+        if (archivo.exists()) {
+            try {
+                sc = new Scanner(archivo);
+                String a = "";
+                a += sc.next();
+                a = a.replace("nombre:", "");
+                a = a.replace("[", "");
+                a = a.replace("]", "");
+                a = a.replace(":", "");
+                a = a.replace("usuario:", "");
+                a = a.replace("contraseña:", "");
+                String[] temp = a.split(",");
+              
+
+            } catch (Exception ex) {
+            }
+            sc.close();
+        }
+        
     }//GEN-LAST:event_jb_CR_aregarMouseClicked
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+    private void jt_CP_priceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jt_CP_priceActionPerformed
+  
+    }//GEN-LAST:event_jt_CP_priceActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+      
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        Producto product = new Producto(jt_CP_name.getText(), Double.parseDouble(jt_CP_price.getText()));
+        
+        productos.add(product);
+        
+    }//GEN-LAST:event_jButton1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -525,6 +663,7 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -539,11 +678,11 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPasswordField jPasswordField1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JButton jb_CR_aregar;
     private javax.swing.JButton jb_LOG_CC;
     private javax.swing.JButton jb_LOG_ingresar;
@@ -553,9 +692,12 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
     private javax.swing.JPanel jp_loging;
     private javax.swing.JPanel jp_menuAdmin;
     private javax.swing.JPasswordField jpas_CU_contra;
+    private javax.swing.JTextField jt_CP_name;
+    private javax.swing.JTextField jt_CP_price;
     private javax.swing.JTextField jt_CR_name;
     private javax.swing.JTextField jt_CR_ubi;
     private javax.swing.JTextField jt_CU_NU;
     private javax.swing.JTextField jt_CU_nombre;
+    private javax.swing.JTree jtr_tucola;
     // End of variables declaration//GEN-END:variables
 }
