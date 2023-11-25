@@ -4,6 +4,10 @@
  */
 package lab7p2_diegoordonez;
 
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 /**
  *
  * @author 50432
@@ -13,12 +17,44 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
     /**
      * Creates new form Lab7P2_DiegoOrdonez
      */
+    static ArrayList<Usuario> users = new ArrayList();
+    static ArrayList<Restaurante> restaurantes = new ArrayList<>();
+    static File archivo = null;
+
     public Lab7P2_DiegoOrdonez() {
         initComponents();
-        
+
         jp_CrearU.setVisible(false);
         jp_menuAdmin.setVisible(false);
     }
+
+    public void cargarArchivo() {
+        Scanner sc = null;
+        users = new ArrayList();
+        if (archivo.exists()) {
+            try {
+                sc = new Scanner(archivo);
+                String a = "";
+                a += sc.next();
+                a = a.replace("nombre:", "");
+                a = a.replace("[", "");
+                a = a.replace("]", "");
+                a = a.replace(":", "");
+                a = a.replace("usuario:", "");
+                a = a.replace("contraseña:", "");
+                String[] temp = a.split(",");
+                while (sc.hasNext()) {
+                    users.add(new Usuario(temp[0], temp[1], temp[2]));
+
+                }
+
+            } catch (Exception ex) {
+            }
+            sc.close();
+        }//FIN IF
+    }
+
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -36,18 +72,26 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jPasswordField1 = new javax.swing.JPasswordField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jb_LOG_ingresar = new javax.swing.JButton();
+        jb_LOG_CC = new javax.swing.JButton();
         jp_CrearU = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jPasswordField2 = new javax.swing.JPasswordField();
-        jButton3 = new javax.swing.JButton();
+        jt_CU_nombre = new javax.swing.JTextField();
+        jt_CU_NU = new javax.swing.JTextField();
+        jpas_CU_contra = new javax.swing.JPasswordField();
+        jb_creaU = new javax.swing.JButton();
         jp_menuAdmin = new javax.swing.JPanel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jt_CR_name = new javax.swing.JTextField();
+        jt_CR_ubi = new javax.swing.JTextField();
+        jb_CR_aregar = new javax.swing.JButton();
 
         jd_loging_CrearU.setPreferredSize(new java.awt.Dimension(801, 401));
 
@@ -82,9 +126,19 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
 
         jPasswordField1.setText("jPasswordField1");
 
-        jButton1.setText("Ingresar");
+        jb_LOG_ingresar.setText("Ingresar");
+        jb_LOG_ingresar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jb_LOG_ingresarMouseClicked(evt);
+            }
+        });
 
-        jButton2.setText("Crear cuenta");
+        jb_LOG_CC.setText("Crear cuenta");
+        jb_LOG_CC.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jb_LOG_CCMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jp_logingLayout = new javax.swing.GroupLayout(jp_loging);
         jp_loging.setLayout(jp_logingLayout);
@@ -103,9 +157,9 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
                             .addComponent(jPasswordField1)))
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jp_logingLayout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jb_LOG_ingresar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jb_LOG_CC, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(290, Short.MAX_VALUE))
         );
         jp_logingLayout.setVerticalGroup(
@@ -123,8 +177,8 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
                     .addComponent(jPasswordField1, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jp_logingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jb_LOG_ingresar, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                    .addComponent(jb_LOG_CC, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(155, Short.MAX_VALUE))
         );
 
@@ -137,13 +191,23 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
 
         jLabel7.setText("Contraseña");
 
-        jTextField2.setText("Ingrese su nombre");
+        jt_CU_nombre.setText("Ingrese su nombre");
+        jt_CU_nombre.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jt_CU_nombreMouseClicked(evt);
+            }
+        });
 
-        jTextField3.setText("Ingrese su nombre de usuario");
+        jt_CU_NU.setText("Ingrese su nombre de usuario");
 
-        jPasswordField2.setText("jPasswordField2");
+        jpas_CU_contra.setText("jPasswordField2");
 
-        jButton3.setText("Aceptar");
+        jb_creaU.setText("Aceptar");
+        jb_creaU.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jb_creaUMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jp_CrearULayout = new javax.swing.GroupLayout(jp_CrearU);
         jp_CrearU.setLayout(jp_CrearULayout);
@@ -162,12 +226,12 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
                             .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jp_CrearULayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField2)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
-                            .addComponent(jPasswordField2)))
+                            .addComponent(jt_CU_nombre)
+                            .addComponent(jt_CU_NU, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+                            .addComponent(jpas_CU_contra)))
                     .addGroup(jp_CrearULayout.createSequentialGroup()
                         .addGap(220, 220, 220)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jb_creaU, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(277, Short.MAX_VALUE))
         );
         jp_CrearULayout.setVerticalGroup(
@@ -177,32 +241,98 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jp_CrearULayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+                    .addComponent(jt_CU_nombre, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jp_CrearULayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+                    .addComponent(jt_CU_NU, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jp_CrearULayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jp_CrearULayout.createSequentialGroup()
-                        .addComponent(jPasswordField2)
+                        .addComponent(jpas_CU_contra)
                         .addGap(3, 3, 3)))
                 .addGap(18, 18, 18)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jb_creaU, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(148, Short.MAX_VALUE))
         );
+
+        jTabbedPane1.setBackground(new java.awt.Color(255, 255, 255));
+        jTabbedPane1.setForeground(new java.awt.Color(0, 0, 0));
+
+        jLabel8.setText("Nombre");
+
+        jLabel9.setText("Ubicacion");
+
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel10.setText("Crear restaurante");
+
+        jt_CR_name.setText("Name");
+
+        jt_CR_ubi.setText("Ubicacion");
+
+        jb_CR_aregar.setText("Agregar restaurante");
+        jb_CR_aregar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jb_CR_aregarMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(240, 240, 240)
+                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(79, 79, 79)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jt_CR_ubi, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                            .addGap(70, 70, 70)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(jt_CR_name, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(218, 218, 218)
+                        .addComponent(jb_CR_aregar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(235, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jt_CR_name, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jt_CR_ubi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jb_CR_aregar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(115, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Crear Restaurante", jPanel1);
 
         javax.swing.GroupLayout jp_menuAdminLayout = new javax.swing.GroupLayout(jp_menuAdmin);
         jp_menuAdmin.setLayout(jp_menuAdminLayout);
         jp_menuAdminLayout.setHorizontalGroup(
             jp_menuAdminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 990, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1)
         );
         jp_menuAdminLayout.setVerticalGroup(
             jp_menuAdminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 490, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -249,6 +379,61 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jb_creaUMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_creaUMouseClicked
+
+        Usuario user = new Usuario(jt_CU_nombre.getText(), jt_CU_NU.getText(), jpas_CU_contra.getText());
+
+        users.add(user);
+        archivo = new File("./usr");
+        FileWriter fw = null;
+        BufferedWriter bw = null;
+        try {
+            fw = new FileWriter(archivo, false);
+            bw = new BufferedWriter(fw);
+            for (Usuario t : users) {
+
+                bw.write("[nombre:" + jt_CU_nombre.getText() + "," + "usuario:" + jt_CU_NU.getText() + "," + "contra:" + jpas_CU_contra.getText() + "]");
+
+            }
+            bw.flush();
+        } catch (Exception ex) {
+        }
+        try {
+            bw.close();
+            fw.close();
+        } catch (Exception e) {
+        }
+
+        jp_CrearU.setVisible(false);
+        jp_loging.setVisible(true);
+        jt_CU_nombre.setText("");
+        jt_CU_nombre.setText("");
+        jpas_CU_contra.setText("");
+    }//GEN-LAST:event_jb_creaUMouseClicked
+
+    private void jb_LOG_CCMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_LOG_CCMouseClicked
+        jp_loging.setVisible(false);
+        jp_CrearU.setVisible(true);
+    }//GEN-LAST:event_jb_LOG_CCMouseClicked
+
+    private void jt_CU_nombreMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_CU_nombreMouseClicked
+        jt_CU_nombre.setText("");
+        jt_CU_NU.setText("");
+        jpas_CU_contra.setText("");
+    }//GEN-LAST:event_jt_CU_nombreMouseClicked
+
+    private void jb_LOG_ingresarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_LOG_ingresarMouseClicked
+        jp_loging.setVisible(false);
+        jp_menuAdmin.setVisible(true);
+    }//GEN-LAST:event_jb_LOG_ingresarMouseClicked
+
+    private void jb_CR_aregarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_CR_aregarMouseClicked
+        Restaurante rest = new Restaurante(jt_CR_name.getText(), jt_CR_ubi.getText());
+        restaurantes.add(rest);
+        jt_CR_name.setText("");
+        jt_CR_ubi.setText("");
+    }//GEN-LAST:event_jb_CR_aregarMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -260,7 +445,7 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -282,28 +467,37 @@ public class Lab7P2_DiegoOrdonez extends javax.swing.JFrame {
                 new Lab7P2_DiegoOrdonez().setVisible(true);
             }
         });
+
     }
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JPasswordField jPasswordField2;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JButton jb_CR_aregar;
+    private javax.swing.JButton jb_LOG_CC;
+    private javax.swing.JButton jb_LOG_ingresar;
+    private javax.swing.JButton jb_creaU;
     private javax.swing.JDialog jd_loging_CrearU;
     private javax.swing.JPanel jp_CrearU;
     private javax.swing.JPanel jp_loging;
     private javax.swing.JPanel jp_menuAdmin;
+    private javax.swing.JPasswordField jpas_CU_contra;
+    private javax.swing.JTextField jt_CR_name;
+    private javax.swing.JTextField jt_CR_ubi;
+    private javax.swing.JTextField jt_CU_NU;
+    private javax.swing.JTextField jt_CU_nombre;
     // End of variables declaration//GEN-END:variables
 }
